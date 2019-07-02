@@ -6,7 +6,7 @@
 /*   By: bharmund <bharmund@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/05 18:27:07 by bharmund          #+#    #+#             */
-/*   Updated: 2019/02/03 17:45:58 by bharmund         ###   ########.fr       */
+/*   Updated: 2019/07/01 10:23:39 by bharmund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 # define LIBFT_H
 # include <string.h>
 # include <stdlib.h>
+# include <limits.h>
+# include <unistd.h>
+
+# ifndef BUFF_SIZE
+#  define BUFF_SIZE 9999
+# endif
 
 typedef	struct		s_list
 {
@@ -21,6 +27,13 @@ typedef	struct		s_list
 	size_t				content_size;
 	struct s_list		*next;
 }					t_list;
+typedef struct		s_gnl
+{
+	char			*text;
+	int				fd;
+	struct s_gnl	*next;
+}					t_gnl;
+int					get_next_line(const int fd, char **line);
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_bzero(void *s, size_t n);
 void				*ft_memccpy(void *dest, const void *src, int c, size_t n);
