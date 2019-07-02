@@ -13,11 +13,19 @@
 
 typedef struct  s_point
 {
-  int x;
-  int y;
-  int z;
+  double x;
+  double y;
+  double z;
 } t_point;
 
+typedef struct s_dis_point
+{
+  int x;
+  int y;
+} t_dis_point;
+
 # ifndef EYE
+#  define EYE 500
+# endif
 
 #endif
