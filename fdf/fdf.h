@@ -24,6 +24,10 @@ typedef struct s_dis_point
   int y;
 } t_dis_point;
 
+void print_point(t_point v);
+
+
+
 int sgn(int x);
 void draw_line(int x0, int x1, int y0, int y1, int size_x, int size_y, char *img);
 void print_matrix(int **matrix, int max_y, int max_x);
@@ -42,7 +46,7 @@ t_dis_point *from_world_to_display(double N, int  **matrix, t_point size_map, do
 double *create_Transformation_matrix(t_point eye, t_point lookAt, t_point up);
 
 # ifndef EYE
-#  define EYE 30
+#  define EYE 20
 # endif
 
 #endif

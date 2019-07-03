@@ -73,9 +73,9 @@ int **creat_matrix(t_list **alst, int max_y)
 
 	tmp = *alst;
 	matrix = (int**)malloc(sizeof(int*) * (max_y));
-	while (max_y >= 0)
+	while (max_y > 0)
 	{
-		matrix[max_y] = tmp->content;
+		matrix[max_y - 1] = tmp->content;
 		tmp =  tmp->next ;
 		max_y--;
 	}
@@ -118,7 +118,10 @@ int **read_file(int fd, t_point *size_map)
 	max_y = 0;
 	max_x = 0;
 	if (get_next_line(fd, &line) == 1)
+	{
 			ft_lstadd(&start, ft_lstnew(take_int(line, &max_x), (max_x)*sizeof(int)));
+			max_y++;
+	}
 	while (get_next_line(fd, &line) == 1)
 	{
 				ft_lstadd(&start, ft_lstnew(take_int(line, &tmp), (max_x)*sizeof(int)));
@@ -126,11 +129,11 @@ int **read_file(int fd, t_point *size_map)
 				//	error;
 				max_y++;
 	}
-	size_map->x = max_x + 1;
-	size_map->y = max_y + 1;
+	size_map->x = max_x;
+	size_map->y = max_y;
 	size_map->z = 10;
  	matrix = creat_matrix(&start, max_y);
-	//print_matrix(matrix, max_y, max_x);
+	print_matrix(matrix, max_y, max_x);
 	return (matrix);
 }
 
@@ -147,7 +150,7 @@ void draw_map(t_dis_point *coord, t_point s, char *img)
 		{	
 			if (i != 0) 
 				draw_line(coord[i * (int)s.x + j].x, coord[(i - 1)* (int)s.x + j].x, coord[i * (int)s.x + j].y, coord[(i - 1)  * (int)s.x + j].y, s.x, s.y, img);
-			if (i != s.y -1)
+			if (i != s.y - 1)
 				draw_line(coord[i * (int)s.x + j].x, coord[(i + 1)* (int)s.x + j].x, coord[i * (int)s.x + j].y, coord[(i + 1)  * (int)s.x + j].y, s.x, s.y, img);
 			if (j != 0)
 				draw_line(coord[i * (int)s.x + j].x, coord[i * (int)s.x + j - 1].x, coord[i * (int)s.x + j].y, coord[i * (int)s.x + j - 1].y, s.x, s.y, img);

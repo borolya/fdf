@@ -2,6 +2,11 @@
 //потом надо будет нормализовать векторыыыыыы
 //void from_matrix_to_coordinate(int **matrix, int max)
 
+void print_point(t_point v)
+{
+  printf("x=%lf y = %lf z = %lf\n", v.x, v.y, v.z);
+}
+
 t_point vector_sum(t_point u, t_point v)
 {
   t_point w;
@@ -56,6 +61,8 @@ t_point matrix_dot_vector(double *matrix, t_point v)
 
 void initialization(t_point size_map, t_point *eye, t_point *lookAt, t_point *up, double *N)//need by maps parametrs
 {
+
+  *N = 5;
   eye->x = EYE;
   eye->y = EYE;
   eye->z = EYE;
@@ -96,8 +103,9 @@ t_dis_point *from_world_to_display(double N, int  **matrix, t_point size_map, do
     while (j < size_map.x)
     {
       al_coord = from_world_to_aligned(tr_matrix, matrix, eye, size_map, i, j);
-      (dis[i * (int)size_map.x + j]).x = (al_coord.x * N ) / al_coord.z;
-      (dis[i * (int)size_map.x + j]).y = (al_coord.y * N ) / al_coord.z;
+      printf( " %lf %lf \n ", al_coord.x , al_coord.y );
+      (dis[i * (int)size_map.x + j]).x = (int)((al_coord.x * N ) / al_coord.z);
+      (dis[i * (int)size_map.x + j]).y = (int)((al_coord.y * N ) / al_coord.z);
       j++;
     }
     i++;
@@ -113,9 +121,17 @@ double *create_Transformation_matrix(t_point eye, t_point lookAt, t_point up)
   t_point v;
   double length;
 
+  print_point(eye);
+  print_point(lookAt);
+  print_point(up);
+  
   w = vector_sum(lookAt, const_dot_vector(-1, eye));
   v = vector_product(w, up);
   u = vector_product(w, v);
+
+  print_point(w);
+  print_point(v);
+  print_point(u);
 
   tr_matrix = ft_memalloc(sizeof(double) * 9);
         // error;
