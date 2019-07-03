@@ -38,7 +38,7 @@ t_point vector_product(t_point u, t_point v)
   t_point w;
 
   w.x = u.y*v.z - u.z*v.y;
-  w.y = - u.x*v.z + u.z*v*x;
+  w.y = - u.x*v.z + u.z*v.x;
   w.z = u.x*v.y - u.y*v.x;
   return (w);
 }
@@ -50,77 +50,60 @@ t_point matrix_dot_vector(double *matrix, t_point v)
   w.x = v.x * matrix[0] + v.y * matrix[1] + v.z * matrix[2];
   w.y = v.x * matrix[3] + v.y * matrix[4] + v.z * matrix[5];
   w.x = v.x * matrix[6] + v.y * matrix[7] + v.z * matrix[8];
-  return (t_point); 
+  return (w); 
 }
  
 
-void initialization(t_point size_map)//need by maps parametrs
+void initialization(t_point size_map, t_point *eye, t_point *lookAt, t_point *up, double *N)//need by maps parametrs
 {
-  t_point eye; //why we use *?
-  t_point lookAt;
-  t_point up;
-  double N;
-
   eye->x = EYE;
   eye->y = EYE;
   eye->z = EYE;
 
-  lookAt.x = size_map.x/2;
-  lookAt.y = size_map.y/2;
-  lookAt.z = size_map.z/2;
+  lookAt->x = size_map.x/2;
+  lookAt->y = size_map.y/2;
+  lookAt->z = size_map.z/2;
 
-  up.x = 0;
-  up.y = 0;
-  up.z = 1;
+  up->x = 0;
+  up->y = 0;
+  up->z = 1;
 }
 
-t_point *from_world_to_aligned(double *tr_matrix, int **matrix, t_point eye, t_point size_map)
+t_point from_world_to_aligned(double *tr_matrix, int **matrix, t_point eye, t_point size_map, int i, int j)
 {
-  t_point *coord;
-  int i;
-  int j;
   t_point tmp;
 
-  if (!(coord = ft_memmalloc(sizeof(t_point) * size_map.x * size_map.y)))
-    error;
-    i = 0;
-  while (i < size_map.y)
-  {
-    j = 0;
-    while (j < size_map.x)
-    {
-      tmp.x = j;
-      tmp.y = i;
-      tmp.z = matrix[i][j];
-      (coord[i * size_map.x + j]) = vector_sum(matrix_dot_vector(tr_matrix, tmp), eye);
-      j++; 
-    }
-    i++;
-  }
+  tmp.x = j;
+  tmp.y = i;
+  tmp.z = matrix[i][j];
+  tmp = vector_sum(matrix_dot_vector(tr_matrix, tmp), eye);
+  return (tmp);
 }
 
-/*
-t_dis_point *from_aligned_to_display(double N, t_point *al_coord, t_point size_map)
+t_dis_point *from_world_to_display(double N, int  **matrix, t_point size_map, double *tr_matrix, t_point eye)
 {
   t_dis_point *dis;
   int i;
   int j;
+  t_point al_coord;
 
-  if (!(dis = ft_memmalloc(sizeof(t_dis_point) * size_map.x * size_map.y)))
-    error;
+  dis = ft_memalloc(sizeof(t_dis_point) * size_map.x * size_map.y);
+   // error;
     i = 0;
   while (i < size_map.y)
   {
     j = 0;
     while (j < size_map.x)
     {
-      (coord_dis[i * size_map.x + j]).x = 
+      al_coord = from_world_to_aligned(tr_matrix, matrix, eye, size_map, i, j);
+      (dis[i * (int)size_map.x + j]).x = (al_coord.x * N ) / al_coord.z;
+      (dis[i * (int)size_map.x + j]).y = (al_coord.y * N ) / al_coord.z;
+      j++;
     }
     i++;
   }
-
+  return (dis);
 }
-*/
 
 double *create_Transformation_matrix(t_point eye, t_point lookAt, t_point up)
 {
@@ -130,21 +113,21 @@ double *create_Transformation_matrix(t_point eye, t_point lookAt, t_point up)
   t_point v;
   double length;
 
-  w = vector_substraction(lookAt, const_dot_vector(-1, eye));
+  w = vector_sum(lookAt, const_dot_vector(-1, eye));
   v = vector_product(w, up);
   u = vector_product(w, v);
 
-  if (!(tr_matrix = ft_memmalloc(sizeof(double) * 9)))
-    error;
+  tr_matrix = ft_memalloc(sizeof(double) * 9);
+        // error;
     //if length == 0? 
   length = vector_length(v);
-  tr_matrix[0] = w.x / length;
-  tr_matrix[3] = w.y / length;
-  tr_matrix[6] = w.z / length;
+  tr_matrix[0] = v.x / length;
+  tr_matrix[3] = v.y / length;
+  tr_matrix[6] = v.z / length;
   length = vector_length(u);
-  tr_matrix[1] = w.x / length;
-  tr_matrix[4] = w.y / length;
-  tr_matrix[7] = w.z / length;
+  tr_matrix[1] = u.x / length;
+  tr_matrix[4] = u.y / length;
+  tr_matrix[7] = u.z / length;
   length = vector_length(w);
   tr_matrix[2] = w.x / length;
   tr_matrix[5] = w.y / length;
