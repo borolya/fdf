@@ -4,12 +4,20 @@
 # include "mlx.h"
 # include "libft.h"
 # include <stdio.h>
-# include <math.h>
+#include <math.h>
 # include <strings.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stddef.h>
+
+
+typedef struct  s_point_int
+{
+  int x;
+  int y;
+  int z;
+} t_point_int;
 
 typedef struct  s_point
 {
@@ -25,7 +33,7 @@ typedef struct s_dis_point
 } t_dis_point;
 
 void print_point(t_point v);
-
+t_point from_int_to_double(t_point_int v);
 
 
 int sgn(int x);
@@ -33,8 +41,9 @@ void draw_line(int x0, int x1, int y0, int y1, int size_x, int size_y, char *img
 void print_matrix(int **matrix, int max_y, int max_x);
 int **creat_matrix(t_list **alst, int max_y);
 int *take_int(char *line, int *max_x);
-int **read_file(int fd, t_point *size_map);
-void draw_map(t_dis_point* coord, t_point s, char *img);
+int **read_file(int fd, t_point_int *size_map);
+void draw_map(t_dis_point* coord, t_point_int s, char *img);
+int find_max_z(int **matrix, int max_y, int max_x);
 t_point vector_sum(t_point u, t_point v);
 t_point const_dot_vector(double a, t_point v);
 double vector_length(t_point v);
@@ -47,6 +56,14 @@ double *create_Transformation_matrix(t_point eye, t_point lookAt, t_point up);
 
 # ifndef EYE
 #  define EYE 20
+# endif
+
+# ifndef img_width
+#  define img_width 300
+# endif
+
+# ifndef img_height
+#  define img_height 300
 # endif
 
 #endif

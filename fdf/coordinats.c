@@ -2,74 +2,17 @@
 //потом надо будет нормализовать векторыыыыыы
 //void from_matrix_to_coordinate(int **matrix, int max)
 
-void print_point(t_point v)
-{
-  printf("x=%lf y = %lf z = %lf\n", v.x, v.y, v.z);
-}
-
-t_point vector_sum(t_point u, t_point v)
-{
-  t_point w;
-
-  w.x = u.x + v.x;
-  w.y = u.y + v.y;
-  w.z = u.z + v.z;
-   return (w);
-}
-
-t_point const_dot_vector(double a, t_point v)
-{
-  t_point w;
-
-  w.x = a * v.x;
-  w.y = a * v.y;
-  w.z = a * v.z;
-
-  return (w);
-}
-
-double vector_length(t_point v)
-{
-  double lenth;
-
-  lenth = v.x*v.x + v.y*v.y + v.z*v.z;
-  lenth = sqrt(lenth);
-  return (lenth);
-}
-
-
-t_point vector_product(t_point u, t_point v)
-{
-  t_point w;
-
-  w.x = u.y*v.z - u.z*v.y;
-  w.y = - u.x*v.z + u.z*v.x;
-  w.z = u.x*v.y - u.y*v.x;
-  return (w);
-}
-
-t_point matrix_dot_vector(double *matrix, t_point v)
-{
-  t_point w;
-
-  w.x = v.x * matrix[0] + v.y * matrix[1] + v.z * matrix[2];
-  w.y = v.x * matrix[3] + v.y * matrix[4] + v.z * matrix[5];
-  w.x = v.x * matrix[6] + v.y * matrix[7] + v.z * matrix[8];
-  return (w); 
-}
- 
-
 void initialization(t_point size_map, t_point *eye, t_point *lookAt, t_point *up, double *N)//need by maps parametrs
 {
 
   *N = 5;
-  eye->x = EYE;
-  eye->y = EYE;
-  eye->z = EYE;
+  eye->x = 40;
+  eye->y = 40;
+  eye->z = 5;
 
   lookAt->x = size_map.x/2;
   lookAt->y = size_map.y/2;
-  lookAt->z = size_map.z/2;
+  lookAt->z = size_map.z/2;//z - 0? 
 
   up->x = 0;
   up->y = 0;
@@ -103,9 +46,15 @@ t_dis_point *from_world_to_display(double N, int  **matrix, t_point size_map, do
     while (j < size_map.x)
     {
       al_coord = from_world_to_aligned(tr_matrix, matrix, eye, size_map, i, j);
-      printf( " %lf %lf \n ", al_coord.x , al_coord.y );
+      printf( " i = %d j = %d \n %lf %lf \n ", i, j, al_coord.x , al_coord.y );
       (dis[i * (int)size_map.x + j]).x = (int)((al_coord.x * N ) / al_coord.z);
       (dis[i * (int)size_map.x + j]).y = (int)((al_coord.y * N ) / al_coord.z);
+      if ((dis[i * (int)size_map.x + j]).x < 0 || (dis[i * (int)size_map.x + j]).x >= img_width ||
+                (dis[i * (int)size_map.x + j]).y < 0 || (dis[i * (int)size_map.x + j]).y >= img_height)
+                {
+                  printf("!!!!!  i = %d j = %d is not correct!!!", i, j);
+                }
+      printf( " on display %d %d \n ", (dis[i * (int)size_map.x + j]).x , (dis[i * (int)size_map.x + j]).y );
       j++;
     }
     i++;
@@ -138,15 +87,15 @@ double *create_Transformation_matrix(t_point eye, t_point lookAt, t_point up)
     //if length == 0? 
   length = vector_length(v);
   tr_matrix[0] = v.x / length;
-  tr_matrix[3] = v.y / length;
-  tr_matrix[6] = v.z / length;
+  tr_matrix[1] = v.y / length;
+  tr_matrix[2] = v.z / length;
   length = vector_length(u);
-  tr_matrix[1] = u.x / length;
+  tr_matrix[3] = u.x / length;
   tr_matrix[4] = u.y / length;
-  tr_matrix[7] = u.z / length;
+  tr_matrix[5] = u.z / length;
   length = vector_length(w);
-  tr_matrix[2] = w.x / length;
-  tr_matrix[5] = w.y / length;
+  tr_matrix[6] = w.x / length;
+  tr_matrix[7] = w.y / length;
   tr_matrix[8] = w.z / length;
   return (tr_matrix);
 }

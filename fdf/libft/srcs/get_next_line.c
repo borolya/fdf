@@ -101,7 +101,7 @@ int				get_next_line(const int fd, char **line)
 	t_gnl			*item;
 	int				gnl;
 
-	if (fd < 0 || fd > OPEN_MAX || !line || BUFF_SIZE < 1)
+	if (fd < 0 || fd > FOPEN_MAX || !line || BUFF_SIZE < 1)
 		return (-1);
 	item = start;
 	while (!!item)
