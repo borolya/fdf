@@ -2,13 +2,15 @@
 //потом надо будет нормализовать векторыыыыыы
 //void from_matrix_to_coordinate(int **matrix, int max)
 
+
+
+
 void initialization(t_point size_map, t_point *eye, t_point *lookAt, t_point *up, double *N)//need by maps parametrs
 {
-
-  *N = 5;
-  eye->x = 40;
-  eye->y = 40;
-  eye->z = 5;
+  *N = 300;
+  eye->x = 15;
+  eye->y = 15;
+  eye->z = 15;
 
   lookAt->x = size_map.x/2;
   lookAt->y = size_map.y/2;
@@ -26,7 +28,9 @@ t_point from_world_to_aligned(double *tr_matrix, int **matrix, t_point eye, t_po
   tmp.x = j;
   tmp.y = i;
   tmp.z = matrix[i][j];
-  tmp = vector_sum(matrix_dot_vector(tr_matrix, tmp), eye);
+  //умножить на матр
+  tmp = vector_sum(tmp, const_dot_vector(-1, eye));
+  tmp = matrix_dot_vector(tr_matrix, tmp);
   return (tmp);
 }
 
@@ -46,7 +50,7 @@ t_dis_point *from_world_to_display(double N, int  **matrix, t_point size_map, do
     while (j < size_map.x)
     {
       al_coord = from_world_to_aligned(tr_matrix, matrix, eye, size_map, i, j);
-      printf( " i = %d j = %d \n %lf %lf \n ", i, j, al_coord.x , al_coord.y );
+      printf( " i = %d j = %d N = %lf\n %lf %lf %lf\n ", i, j, N, al_coord.x , al_coord.y , al_coord.z);
       (dis[i * (int)size_map.x + j]).x = (int)((al_coord.x * N ) / al_coord.z);
       (dis[i * (int)size_map.x + j]).y = (int)((al_coord.y * N ) / al_coord.z);
       if ((dis[i * (int)size_map.x + j]).x < 0 || (dis[i * (int)size_map.x + j]).x >= img_width ||
@@ -54,7 +58,7 @@ t_dis_point *from_world_to_display(double N, int  **matrix, t_point size_map, do
                 {
                   printf("!!!!!  i = %d j = %d is not correct!!!", i, j);
                 }
-      printf( " on display %d %d \n ", (dis[i * (int)size_map.x + j]).x , (dis[i * (int)size_map.x + j]).y );
+      //printf( " on display %d %d \n ", (dis[i * (int)size_map.x + j]).x , (dis[i * (int)size_map.x + j]).y );
       j++;
     }
     i++;

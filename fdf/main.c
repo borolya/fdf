@@ -1,5 +1,25 @@
 #include "fdf.h"
 
+void all_red(int x, int y, char *data)
+{
+    int i;
+    int j;
+
+    i = 0;
+    while(i < y)
+    {
+        j = 0;
+        while(j < x)
+        {
+            data[i * x * 4 + j * 4 + 2] = (char)200;
+            j++;
+        }
+    i++;
+    } 
+}
+
+
+
 int main(int argc, char **argv)
 {
     t_point_int size_map;
@@ -43,13 +63,14 @@ int main(int argc, char **argv)
         j = 0;
         while( j < size_map.x)
         {
-            (dis_coord[i * size_map.x + j]).y = i*20;
-            (dis_coord[i * size_map.x + j]).x = j*20;
+            (dis_coord[i * (int)size_map.x + j]).x = j * 10;
+            (dis_coord[i * (int)size_map.x + j]).y = i * 10;
             j++;
         }
         i++;
     }
     */
+   printf("hu");
     mlx_ptr = mlx_init();
     win_height = 500;
     win_width = 500;
@@ -57,7 +78,8 @@ int main(int argc, char **argv)
     
     img = mlx_new_image (mlx_ptr, img_width, img_height);
     img_data = mlx_get_data_addr ( img, &bits_per_pixel, &size_line, &endian);
-    //draw_line(-10, 50, -10, 50, img_width, img_height, img_data);
+    //all_red(img_width, img_height, img_data);
+   // draw_line(-40, -27, 37, 25, img_width, img_height, img_data);
     draw_map(dis_coord, size_map, img_data);
      mlx_put_image_to_window (mlx_ptr, mlx_win, img, 0, 0);
     mlx_loop ( mlx_ptr );

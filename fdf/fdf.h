@@ -59,11 +59,11 @@ double *create_Transformation_matrix(t_point eye, t_point lookAt, t_point up);
 # endif
 
 # ifndef img_width
-#  define img_width 300
+#  define img_width 500
 # endif
 
 # ifndef img_height
-#  define img_height 300
+#  define img_height 500
 # endif
 
 #endif
