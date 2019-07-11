@@ -1,30 +1,37 @@
 #include "fdf.h"
 
-void del(t_list **start, t_map **map, int flag)
+//1 is error
+
+void del_start_of_list(t_list **start)
+{
+    t_list *tmp;
+
+    tmp = tmp = (*start)->next;
+    ft_memdel((void**)&((*start)->content));
+    ft_memdel((void**)start);
+    *start = tmp;
+}
+
+int del_list_map(t_list **start, t_map **map, int flag)
 {
     t_list		*tmp;
     int i;
 
-	//if (!alst)
-	//	return ;
-	while (*start)
-	{
-		tmp = (*start)->next;
-		ft_memdel(&(*start->content));
-        ft_memdel(start);
-		*start = tmp;
-	}
-	//*start = NULL;
+	while (*start && start)
+        del_start_of_list(start);
     if (*map && map)
     {
-        i = *map->h;
-    //if (flag >= 0)
-        while (--i >= flag)
-           ft_memdel(&(*map->crd[i]);
-        if (flag != -2)
-            ft_memdel(&(*map->crd));
-        ft_memdel(map));
+        i = (*map)->h;
+        if (flag >= 0)// free from h to flag
+        {
+            while (--i >= flag)
+                ft_memdel((void**)&((*map)->crd[i]));
+        }
+        if (flag != -2) //if flag == -1 free only map->crd//if flag == -2 free only map
+            ft_memdel((void**)&((*map)->crd));
+        ft_memdel((void**)map);
     }
+    return (1);
  }
 
 int word_count(char **split)
@@ -43,23 +50,26 @@ int take_coord(char *line, t_map *map, int numb)
     int i;
 
     if (!(split = ft_strsplit(line, ' ')))
-        //free
+        return(1);
     map->w = word_count(split);
-    if (!(map->crd[numb] = ft_memalloc(sizeof(double) * map -> w)))
-        //free
+    if (!(map->crd[numb] = ft_memalloc(sizeof(t_point) * map->w)))
+        return(1);
     i = 0;
     while (i < map->w)
     {
-        map->crd[numb][i] = fr_atoi(split[i]);
-        if (map->crd[numb][i] > map->depth_max)
-            map->depth_max = map->crd[numb][i];
-        if (map->crd[numb][i] < map->depth_min)
-            map->depth_min = map->crd[numb][i];
+        map->crd[numb][i].x = (double)i;
+        map->crd[numb][i].y = (double)numb;
+        map->crd[numb][i].z = (double)ft_atoi(split[i]);
+        if (map->crd[numb][i].z > map->depth_max)
+            map->depth_max = map->crd[numb][i].z;
+        if (map->crd[numb][i].z < map->depth_min)
+            map->depth_min = map->crd[numb][i].z;
         i++;
     }
     while (--i >= 0)
-        ft_memdel(&split[i]);
-    ft_memdel(&split);
+        ft_memdel((void**)&split[i]);
+    ft_memdel((void**)&split);
+    return (0);
 }
 
 int iteration_list(t_list **start, t_map *map)
@@ -71,47 +81,49 @@ int iteration_list(t_list **start, t_map *map)
     map->depth_min = 0;
     map->depth_max = 0;
     numb = map->h - 1;
-    if (!take_blabla(*start->content, map, numb))
-        //free
+    if (take_coord((*start)->content, map, numb))
+        return(del_list_map(start, &map, -1));
     max_x = map->w;
-    tmp = *start->next;
-        //free_lst
-    *start = tmp;
-    while (--numd >= 0)//or numb >=0
+    del_start_of_list(start);
+    while (--numb >= 0)
     {
-        if (!take_blabla(*start->content, map, numb))
-            //free
-        if (max_x != map->x)
+        if (take_coord((*start)->content, map, numb))
+            return(del_list_map(start, &map, numb + 1));
+        if (max_x != map->w)
         {
-             //"short length "
-            //free map, start, map->crd
+            ft_putstr("short length\n");
+            return(del_list_map(start, &map, numb));
         }
-        tmp = *start->next;
-        //free_lst
-        *start = tmp;
+        del_start_of_list(start);
     }
+    return (0);
 }
 
-int read_file(int fd, t_map *map)
+int read_file(int fd, t_map **map)
 {
-    //mb malloc map
     t_list *start;
     t_list *tmp;
     char *line;
-        
-    map->h = 0;
+    
+    if (!(*map = ft_memalloc(sizeof(t_map))))
+        return (1);
+    (*map)->h = 0;
     start = NULL;
     while (get_next_line(fd, &line) == 1)
     {
         if (!(tmp = ft_lstnew(line, ft_strlen(line) + 1)))
-            //free (start) , free ( map)
+            return (del_list_map(&start, map, -2));
         ft_lstadd(&start, tmp);
         free(line);
-        map->h++;
+        (*map)->h++;
     }
-    //if map->h = 0 "file is empty"
-    if (!(map->crd = ft_memalloc(sizeof(*double) * map->h))
-        //free map, 
-    if (take_map_coord(&start, map) != 0)
-        ft_lstdel(&start, free);
+    if ((*map)->h == 0 || !((*map)->crd = ft_memalloc(sizeof(double*) * (*map)->h)))
+    {
+        //
+         ft_putstr("empty file\n");
+        return (del_list_map(&start, map, -2));
+    }
+   // if (!(map->crd = ft_memalloc(sizeof(*double) * map->h))
+     //   return (del_li)
+    return (iteration_list(&start, *map));
 }
