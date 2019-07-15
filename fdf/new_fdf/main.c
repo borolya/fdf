@@ -28,6 +28,7 @@ int main(int argc, char **argv)
     t_map *map;
     int fd;
     t_scene *scene;
+    t_fdf *fdf;
 
     if(argc != 2)
     {
@@ -45,9 +46,9 @@ int main(int argc, char **argv)
         return (0);
     print_map(*map);
     */
-    if (scene_initialization(&scene, &map))
-        return (0);
-    
+   if (init_fdf(&fdf, map))
+    return (0);
+    mlx_hook(win_ptr, 2, 0, user_hook, fgf);
 
 
     return (0);

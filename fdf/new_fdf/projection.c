@@ -1,53 +1,27 @@
 #include "fdf.h"
 
-
-void perspective(t_map *map, t_point **al_crd, t_point **dis_crd)
+t_point take_al_coord(double *tr_matrix, t_point point, t_scene *scene)
 {
-    ///int_t_point **dis_crd;
-    //ранее заммолочены
-    int i;
-    int j;
-    double N;
-
-    //init mb camera and eye
-    N = 10;
-    i = 0;
-    while (i < map->h)
-    {
-        j = 0;
-        while(j < map->w)
-        {
-            if (al_crd[i][j].z < 0.000001)
-            {
-                dis_crd[i][j].x = 10000;
-                dis_crd[i][j].y = 10000;
-                dis_crd[i][j].z = 10000;
-            }
-            dis_crd[i][j].x = (int)(N * al_crd[i][j].x / al_crd[i][j].z); 
-            dis_crd[i][j].y = (int)(N * al_crd[i][j].y / al_crd[i][j].z); 
-            j++;
-        }
-        i++;
-    }
+   return(matrix_dot_vector(tr_matrix, vector_min(point,scene->eye)));
 }
-
-
-
-void parall(t_map *map, t_point **al_crd, t_point **dis_crd);
+//can connect this
+dis_point projection(t_point point, int projection_flag)
 {
-    int i;
-    int j;
-
-    i = 0;
-    while (i < map->h)
+    dis_point dis;
+    if (projection_flag == 1)
     {
-        j = 0;
-        while (j < map->w)
+        if (point.z < 0.000001)
         {
-            dis_crd[i][j].x = (int)al_crd[i][j].x;
-            dis_crd[i][j].y = (int)al_crd[i][j].y;
-            j++;
+            dis.x = 10000;
+            dis.y = 10000;
         }
-        i++;
+        dis.x = (int)(point.x / point.z); 
+        dis.y = (int)(point.y / point.z);
     }
+    else 
+    {
+        dis.x = (int)point.x;
+        dis.y = (int)point.y;
+    }
+    return (dis);
 }

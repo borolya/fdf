@@ -6,6 +6,12 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
+typedef struct s_dis_point
+{
+    int x;
+    int y;
+}   dis_point;
+
 typedef struct s_point
 {
     double x;
@@ -27,8 +33,31 @@ typedef struct s_scene
     t_point eye;
     t_point up;
     t_point lookAt;
-    double N;
 } t_scene;
+
+typedef struct s_img
+{
+    void *ptr;
+    int *data;
+    int w;
+    int h;
+    int b_p_pixel;
+    int s_l;
+    int endian;
+} t_img;
+
+typedef struct s_fdf
+{
+    void *mlx_ptr;
+    void *win_ptr;
+    int win_w;
+    int win_h;
+    int zoom;
+    int projection;
+    t_img *img;
+    t_scene *scene;
+    t_map *map;
+} t_fdf;
 
 int read_file(int fd, t_map **map);
 int iteration_list(t_list **start, t_map *map);

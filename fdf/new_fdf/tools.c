@@ -7,7 +7,6 @@ t_point from_int_to_double(t_point_int v)
     w.x = (double)v.x;
     w.y = (double)v.y;
     w.z = (double)v.z;
-
     return (w);
 }
 
