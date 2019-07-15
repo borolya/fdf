@@ -27,12 +27,16 @@ int main(int argc, char **argv)
 {
     t_map *map;
     int fd;
+    t_scene *scene;
 
     if(argc != 2)
     {
         ft_putstr("need file\n");
         return (0);
     }
+    if (fd = open(argv[1], O_RDONLY) < 0 || read_file(fd, &map))
+     return (0);
+    /*
     fd = open(argv[1], O_RDONLY);
     printf("fd = %d\n", fd);
     if (fd < 0)
@@ -40,5 +44,11 @@ int main(int argc, char **argv)
     if (read_file(fd, &map))
         return (0);
     print_map(*map);
+    */
+    if (scene_initialization(&scene, &map))
+        return (0);
+    
+
+
     return (0);
 }

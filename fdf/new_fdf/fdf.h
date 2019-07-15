@@ -22,11 +22,27 @@ typedef struct s_map
     t_point **crd;
 } t_map;
 
+typedef struct s_scene
+{
+    t_point eye;
+    t_point up;
+    t_point lookAt;
+    double N;
+} t_scene;
+
 int read_file(int fd, t_map **map);
 int iteration_list(t_list **start, t_map *map);
 int take_coord(char *line, t_map *map, int numb);
 int word_count(char **split);
 int del_list_map(t_list **start, t_map **map, int flag);
 void del_start_of_list(t_list **start);
+
+t_point vector_min(t_point u, t_point v);
+t_point vector_sum(t_point u, t_point v);
+t_point const_dot_vector(double a, t_point v);
+double vector_length(t_point v);
+t_point vector_product(t_point u, t_point v);
+t_point matrix_dot_vector(double *matrix, t_point v);
+
 
 #endif

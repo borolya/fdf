@@ -1,7 +1,7 @@
 #include "fdf.h"
 
 //1 is error
-
+//error del
 void del_start_of_list(t_list **start)
 {
     t_list *tmp;
@@ -117,7 +117,7 @@ int read_file(int fd, t_map **map)
         free(line);
         (*map)->h++;
     }
-    if ((*map)->h == 0 || !((*map)->crd = ft_memalloc(sizeof(double*) * (*map)->h)))
+    if ((*map)->h == 0 || !((*map)->crd = ft_memalloc(sizeof(t_point*) * (*map)->h)))
     {
         //
          ft_putstr("empty file\n");
