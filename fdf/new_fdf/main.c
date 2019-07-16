@@ -35,7 +35,7 @@ int main(int argc, char **argv)
         ft_putstr("need file\n");
         return (0);
     }
-    if (fd = open(argv[1], O_RDONLY) < 0 || read_file(fd, &map))
+    if ((fd = open(argv[1], O_RDONLY)) < 0 || read_file(fd, &map))
      return (0);
     /*
     fd = open(argv[1], O_RDONLY);
@@ -46,10 +46,11 @@ int main(int argc, char **argv)
         return (0);
     print_map(*map);
     */
+   //print_map(*map);
    if (init_fdf(&fdf, map))
     return (0);
-    mlx_hook(win_ptr, 2, 0, user_hook, fgf);
+    //mlx_hook(win_ptr, 2, 0, user_hook, fgf);
 
-
+    mlx_loop (fdf->mlx_ptr);
     return (0);
 }

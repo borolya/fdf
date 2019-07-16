@@ -1,14 +1,6 @@
 #include "fdf.h"
 
-t_point from_int_to_double(t_point_int v)
-{
-    t_point w;
-
-    w.x = (double)v.x;
-    w.y = (double)v.y;
-    w.z = (double)v.z;
-    return (w);
-}
+#include <stdio.h>
 
 void print_point(t_point v)
 {
