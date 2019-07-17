@@ -88,4 +88,6 @@ dis_point **take_dis_crd(t_fdf *fdf);
 int init_image(void *mlx_ptr, t_img *img);
 int init_scene(t_scene *scene, t_map *map, int projection);
 int init_fdf(t_fdf **fdf, t_map *map);
+//hook
+int user_hook(int keycode, t_fdf *fdf);
 #endif

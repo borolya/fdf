@@ -30,7 +30,6 @@ int transformation_matrix(t_scene *scene, double **tr_matrix)
   length = vector_length(v);
   if (length < 0.000001)
     printf("bad length v");
-
   (*tr_matrix)[0] = v.x / length;
   (*tr_matrix)[1] = v.y / length;
   (*tr_matrix)[2] = v.z / length;

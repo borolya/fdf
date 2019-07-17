@@ -37,6 +37,7 @@ int main(int argc, char **argv)
     }
     if ((fd = open(argv[1], O_RDONLY)) < 0 || read_file(fd, &map))
      return (0);
+     close(fd);
     /*
     fd = open(argv[1], O_RDONLY);
     printf("fd = %d\n", fd);
@@ -49,7 +50,8 @@ int main(int argc, char **argv)
    //print_map(*map);
    if (init_fdf(&fdf, map))
     return (0);
-    //mlx_hook(win_ptr, 2, 0, user_hook, fgf);
+    
+    mlx_hook(fdf->win_ptr, 2, 0, user_hook, fdf);
 
     mlx_loop (fdf->mlx_ptr);
     return (0);
