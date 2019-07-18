@@ -1,0 +1,55 @@
+#******************************************************************************#
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: bharmund <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/07/18 14:49:48 by bharmund          #+#    #+#              #
+#    Updated: 2019/07/18 15:49:34 by bharmund         ###   ########.fr        #
+#                                                                              #
+#******************************************************************************#
+NAME = fdf
+CC = gcc -Wall -Wextra -Werror
+SRC_LIST = main.c\
+			fdf.c\
+			read.c\
+			draw.c\
+			hook.c\
+			matrix.c\
+			tools.c
+SRC_DIR = srcs/
+SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
+#HEADERS_LIST = fdf.h
+HEADERS_DIR = includes/\
+			libft/includes/\
+			minilibx_macos/
+HEADERS = include/fdf.h\
+		libft/includes/libft.h\
+		minilibx_macos/mlx.h
+OBJ_LIST = $(patsubst %.c, %.o,$(SRC_LIST))
+OBJ_DIR = obj/
+OBJ = $(addprefix $(OBJ_DIR), $(OBJ_LIST))
+
+all: $(NAME)
+
+$(NAME): $(OBJ_DIR) $(OBJ)
+	cc -o $(NAME) $(OBJ) -L libft/ -lft -L minilibx_macos/ -lmlx -framework OpenGL -framework AppKit 
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+$(OBJ): $(SRC) $(HEADERS)
+	$(CC) -I$(HEADER_DIR) $< -o $@ 
+
+clean:
+	make -C ./minilibx_macos clean
+	make -C ./libft fclean
+	rm -rf $(OBJ_DIR)
+
+fclean: clean
+	make -C ./minilibx_macos fclean
+	make -C ./libft fclean
+	rm -f $(NAME)
+
+re: fclean all
