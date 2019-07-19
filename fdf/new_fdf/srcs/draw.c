@@ -1,38 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bharmund <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/19 21:30:34 by bharmund          #+#    #+#             */
+/*   Updated: 2019/07/19 21:31:49 by bharmund         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
-#include <stdio.h>
-dis_point min_crd(dis_point **crd, t_map map)
-{
-    int i;
-    int j;
-    dis_point move;
-
-    move = crd[0][0];
-    i = 0;
-    while (i < map.h)
-    {
-        j = 0;
-        while (j < map.w)
-        {
-            if (crd[i][j].x < move.x)
-                move.x = crd[i][j].x;
-            if (crd[i][j].y > move.y)
-                move.y = crd[i][j].y;
-            j++;
-        }
-        i++;
-    }
-    return (move);
-}
-
-void draw_line(dis_point p1, dis_point p2, dis_point move, t_img *img)
+void draw_line(dis_point p1, dis_point p2, t_img *img)
 {
     dis_point delta;
     dis_point error;
     dis_point sign_d;
-    int pix;
 
-    move.y -= img->h;
     p1.x = p1.x + img->w/2;
     p1.y = p1.y + img->h/2;
     p2.x = p2.x + img->w/2;
@@ -42,18 +27,13 @@ void draw_line(dis_point p1, dis_point p2, dis_point move, t_img *img)
     sign_d.x = p1.x < p2.x ? 1 : -1;
     sign_d.y = p1.y < p2.y ? 1 : -1;
     error.x = delta.x - delta.y;
-   // if ((p2.y - move.y)* img->h + (p2.x - move.x) >= 0 && (p2.y - move.y)* img->h + (p2.x - move.x) < img->h * img->w)
     if (p2.y >= 0 && p2.y < img->h && p2.x>=0 && p2.x < img->w)
         img->data[p2.y * img->h + p2.x] = 10000;
     while (p1.x != p2.x || p1.y != p2.y)
     {
-        pix = (p1.y ) * img->h + (p1.x);
-       // printf("pix = %d ", pix);
-       //if (pix >= 0 && pix < img->h * img->w)
        if (p1.y >= 0 && p1.y < img->h && p1.x >=0 && p1.x  < img->w)
-            img->data[pix] = 10000;
-        error.y = error.x * 2;
-        if (error.y > - delta.y)   
+            img->data[(p1.y ) * img->h + (p1.x)] = 10000;
+        if ((error.y = error.x * 2) > - delta.y)   
         {
             error.x -= delta.y;
             p1.x +=sign_d.x;
@@ -66,31 +46,38 @@ void draw_line(dis_point p1, dis_point p2, dis_point move, t_img *img)
     }
 }
 
+int neqal_dis_point(dis_point p, dis_point q)
+{
+    if (p.x == q.x && p.y == q.y)
+        return (0);
+    return (1);
+}
+
 void draw_map(dis_point **crd, t_map map, t_img *img)
 {
 	int i;
 	int j;
-    dis_point move;
+    dis_point bad;
 
-    move = min_crd(crd, map);
-//	printf("hi");
-	i = 0;
-	while (i < map.h)
+    bad.x = 1000000;
+    bad.y = 1000000;
+	i = -1;
+	while (++i < map.h)
 	{
-		j = 0;
-		while (j < map.w)
+		j = -1;
+		while (++j < map.w)
 		{	
-		//	printf("draw map:i = %d j = %d", i, j);
-			if (i != 0) 
-				draw_line(crd[i][j], crd[i - 1][j], move, img);
-			if (i != map.h - 1)
-				draw_line(crd[i][j], crd[i + 1][j], move, img);
-			if (j != 0) 
-				draw_line(crd[i][j], crd[i][j - 1], move, img);
-			if (j != map.w - 1)
-				draw_line(crd[i][j], crd[i][j + 1], move, img);
-			j++;
+            if (neqal_dis_point(crd[i][j], bad))
+            {
+			    if (i != 0 && neqal_dis_point(crd[i - 1][j], bad)) 
+				    draw_line(crd[i][j], crd[i - 1][j], img);
+			    if (i != map.h - 1 && neqal_dis_point(crd[i + 1][j], bad))
+				    draw_line(crd[i][j], crd[i + 1][j], img);
+			    if (j != 0 && neqal_dis_point(crd[i][j - 1], bad)) 
+				    draw_line(crd[i][j], crd[i][j - 1], img);
+			    if (j != map.w - 1 && neqal_dis_point(crd[i][j + 1], bad))
+				    draw_line(crd[i][j], crd[i][j + 1], img);
+            }
 		}
-		i++;
 	}
 }

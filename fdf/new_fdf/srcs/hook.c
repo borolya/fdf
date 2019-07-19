@@ -1,12 +1,24 @@
-#include "fdf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hook.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bharmund <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/19 21:32:22 by bharmund          #+#    #+#             */
+/*   Updated: 2019/07/19 21:32:23 by bharmund         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <stdio.h>
+
+#include "fdf.h"
 
 int close_win(t_fdf *fdf)
 {
     int i;
 
     mlx_destroy_image(fdf->mlx_ptr, fdf->img->ptr);
+    mlx_destroy_window(fdf->mlx_ptr, fdf->win_ptr);
     ft_memdel((void**)&(fdf->img));
     ft_memdel((void**)&(fdf->scene));
     i = 0;
@@ -16,10 +28,9 @@ int close_win(t_fdf *fdf)
         i++;
     }
     ft_memdel((void**)&(fdf->map->crd));
-    ft_memdel((void**)&(fdf));
+    ft_memdel((void**)&(fdf)); 
     exit(0);
 }
-
 
 int rotate(t_point *p, int flag, int sign)
 {
@@ -56,12 +67,9 @@ int user_hook(int keycode, t_fdf *fdf)
     int j;
     if (keycode == 53)
         close_win(fdf);
-
-    //printf("push %d \n", keycode);
-    if (keycode == 24 || keycode == 27 || keycode == 8 || keycode == 6 ||
-        keycode == 7 || keycode == 0 || keycode ==32 || keycode == 17)
+    if (keycode == 24 || keycode == 27 || keycode == 15 || keycode == 17 ||
+        keycode == 14 || keycode == 13 || keycode == 2 || keycode == 1)
     {
-        
         i = 0;
         while (i < fdf->map->h)
         {
@@ -72,30 +80,32 @@ int user_hook(int keycode, t_fdf *fdf)
                     fdf->map->crd[i][j] = const_dot_vector(1.2,  fdf->map->crd[i][j]);
                 else if (keycode == 27)
                     fdf->map->crd[i][j] = const_dot_vector(0.8, fdf->map->crd[i][j]);
-                else if (keycode == 8)
+                else if (keycode == 15)
                     rotate(&(fdf->map->crd[i][j]), 1, 1);
-                else if (keycode == 6)
-                    rotate(&(fdf->map->crd[i][j]), 1, -1);
-                else if (keycode == 7)
-                    rotate(&(fdf->map->crd[i][j]), 3, 1);
-                else if (keycode == 0)
-                    rotate(&(fdf->map->crd[i][j]), 3, -1);
-                else if (keycode == 32)
-                    rotate(&(fdf->map->crd[i][j]), 2, 1);
                 else if (keycode == 17)
+                    rotate(&(fdf->map->crd[i][j]), 1, -1);
+                else if (keycode == 14)
+                    rotate(&(fdf->map->crd[i][j]), 3, 1);
+                else if (keycode == 13)
+                    rotate(&(fdf->map->crd[i][j]), 3, -1);
+                else if (keycode == 2)
+                    rotate(&(fdf->map->crd[i][j]), 2, 1);
+                else if (keycode == 1)
                     rotate(&(fdf->map->crd[i][j]), 2, -1);
                 j++;
             }
             i++;
         }
     }
-    else if (keycode == 35)
-        fdf->projection = 1;
-    else if (keycode == 34)
+    else if (keycode == 29)
         fdf->projection = 0;
+    else if (keycode == 18)
+        fdf->projection = 1;
+    else if (keycode == 19)
+        fdf->projection = 2;
     mlx_destroy_image (fdf->mlx_ptr, fdf->img->ptr);
     init_image(fdf->mlx_ptr, fdf->img);
-    draw_map(take_dis_crd(fdf), *(fdf->map), fdf->img);
-    mlx_put_image_to_window((fdf)->mlx_ptr, (fdf)->win_ptr, (fdf)->img->ptr, 50, 50);
+    draw_map(take_dis_crd(fdf, fdf->scene->tr_matrix), *(fdf->map), fdf->img);
+    mlx_put_image_to_window((fdf)->mlx_ptr, (fdf)->win_ptr, (fdf)->img->ptr, 150, 150);
     return (0);
 }

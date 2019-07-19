@@ -10,7 +10,7 @@
 #                                                                              #
 #******************************************************************************#
 NAME = fdf
-CC = cc -Wall -Wextra -Werror
+CC = cc -Wall -Wextra -Werror -g
 SRC_LIST = main.c\
 			fdf.c\
 			read.c\
@@ -18,7 +18,8 @@ SRC_LIST = main.c\
 			hook.c\
 			matrix.c\
 			tools.c \
-			projection.c
+			projection.c \
+			menu.c
 SRC_DIR = srcs/
 SRC = $(addprefix $(SRC_DIR), $(SRC_LIST))
 INCLUDES = -I ./includes/\
